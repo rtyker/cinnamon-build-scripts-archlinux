@@ -1,0 +1,13 @@
+#!/bin/bash
+# Stashes and updates all the Cinnamon-relevant things to the latest head version
+
+. buildorder
+
+for dir in ${BUILDORDER[@]}; do
+    echo "..............Running git pull for $dir upstream master"
+    cd $dir
+    git stash
+    git checkout master
+    git pull upstream master
+    cd ..
+done

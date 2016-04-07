@@ -1,0 +1,15 @@
+#!/bin/bash
+
+. buildorder
+
+for dir in ${BUILDORDER[@]}; do
+    echo "..............Running pbuilder for $dir"
+    cd $dir
+    VERSION=$(dpkg-parsechangelog | sed -n "s/^Version: //p")
+    cd ..
+    sudo DIST=$1 pbuilder build ${dir}_$VERSION.dsc
+    if [ $? != 0 ]; then
+        echo "ERROR with $dir!"
+        exit 1
+    fi
+done

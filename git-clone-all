@@ -1,0 +1,9 @@
+#!/bin/bash
+# Does the initial clone of all the cinnamon stuff
+
+. buildorder
+
+for k in ${#BUILDORDER[@]}; do
+    echo "..............Running git clone for ${BUILDORDER[$k]} upstream"
+	git clone -o upstream ${REMOTES[$k]} ${BUILDORDER[$k]}/
+done

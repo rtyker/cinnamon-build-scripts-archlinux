@@ -1,0 +1,95 @@
+#!/bin/bash
+
+GITRESET=
+
+wrouesnelgitdch() {
+    if [ ! -e debian/changelog ]; then
+        echo "debian/changelog not found!"
+        return
+    fi
+
+    # Get epoch and upstream version
+    DEBVERSION=$(dpkg-parsechangelog | sed -n "s/^Version: //p" | \
+        grep -Po '(\d+)?:?(\d+)\.(\d+)\.(\d+)')
+
+	# Date we built the source package
+    BUILDDATE=$(date +%s)
+    # Commitish
+    GITTISH=$(git rev-parse --short HEAD)
+
+	# We only do this when we want to supercede versions, but no one conforms
+	# to useful patterns in Mint development it seems. So instead, grab the
+	# candidate version on the current system and beat that by appending to it,
+	# but only if the debversion on its own wouldn't.
+	SOURCEPACKAGENAME=$(dpkg-parsechangelog | sed -n "s/^Source: //p")
+	CANDIDATEVERSION=$(apt-cache showsrc $SOURCEPACKAGENAME | grep -m 1 Version: | \
+		 	sed -n 's/Version: //p')
+    
+    # Check if the raw deb version would supercede the installed version
+	if dpkg --compare-versions $DEBVERSION gt $CANDIDATEVERSION; then
+		echo "$DEBVERSION supercedes installed version. Using a nicely formed version number."
+		BUILDDEBVERSION=$DEBVERSION
+	else
+		if [ -z $CANDIDATEVERSION ]; then
+			echo "No candidate version found. Using package version."
+			BUILDDEBVERSION=$DEBVERSION
+		else
+			echo "$DEBVERSION does not supercede installed version. Using an appended version number."
+			BUILDDEBVERSION=$CANDIDATEVERSION		
+		fi
+	fi
+
+	# Now create a useful version number increment.
+	FULLVERSION="$BUILDDEBVERSION+wrouesnel$BUILDDATE~git$GITTISH"
+    echo "Setting package version to: $FULLVERSION"
+
+    dch -v $FULLVERSION "Git build from commit $(git rev-parse HEAD)"
+}
+
+. buildorder
+
+while getopts ":r" option; do
+    case $option in
+        r)
+        GITRESET=1
+        ;;
+    esac
+done
+
+PIDS=()
+PROCESSNAMES=()
+
+for dir in ${BUILDORDER[@]}; do
+(
+    cd $dir
+    if [ ! -z $GITRESET ]; then
+        echo "..............Resetting tree"
+        git reset --hard
+    fi
+    wrouesnelgitdch
+    echo "..............Running debuild for $dir"
+    debuild -S > /dev/null
+    if [ $? != 0 ]; then
+        echo "ERROR with $dir!"
+        exit 1
+    fi
+    cd ..
+) &
+# store running pids
+PIDS+=($!)
+PROCESSNAMES+=($dir)
+done
+
+while [[ ${#PIDS[@]} != 0 ]]; do
+	# Loop over pids look for finishes
+	for i in ${!PIDS[@]}; do
+		# if 
+		if ! ps -p ${PIDS[$i]} > /dev/null; then
+			unset PIDS[$i]
+			echo "..............debuild finished for ${PROCESSNAMES[$i]}"
+			unset PROCESSNAMES[$i]
+		fi
+	done
+done
+
+exit 0
