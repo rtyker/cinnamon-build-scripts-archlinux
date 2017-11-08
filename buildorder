@@ -1,6 +1,8 @@
 # This is the order in which things must be built to work, and also the names
 # of the directories things will be cloned into from REMOTES below.
 BUILDORDER=( \
+        xapps \
+        python-xapp \
 	cinnamon-desktop \
 	muffin \
 	cjs \
@@ -12,15 +14,17 @@ BUILDORDER=( \
 	cinnamon \
 	cinnamon-screensaver \
 	cinnamon-bluetooth \
+        nemo \
 	)
 
 # These are the remotes which will be set as upstream. Must be in the same order
 # as the names in build order.
 REMOTES=( \
+	"https://github.com/linuxmint/xapps.git" \
+	"https://github.com/linuxmint/python-xapp.git" \
 	"https://github.com/linuxmint/cinnamon-desktop.git" \
 	"https://github.com/linuxmint/muffin.git" \
 	"https://github.com/linuxmint/cjs.git" \
-	"https://github.com/linuxmint//cinnamon-settings-daemon.git" \
 	"https://github.com/linuxmint/cinnamon-settings-daemon.git" \
 	"https://github.com/linuxmint/cinnamon-session.git" \
 	"https://github.com/linuxmint/cinnamon-translations.git" \
@@ -29,4 +33,5 @@ REMOTES=( \
 	"https://github.com/linuxmint/Cinnamon.git" \
 	"https://github.com/linuxmint/cinnamon-screensaver.git" \
 	"https://github.com/linuxmint/cinnamon-bluetooth.git" \
+	"https://github.com/linuxmint/nemo.git" \
 )

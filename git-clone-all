@@ -3,7 +3,7 @@
 
 . buildorder
 
-for k in ${#BUILDORDER[@]}; do
+for k in $(seq 0 ${#BUILDORDER[@]}); do
     echo "..............Running git clone for ${BUILDORDER[$k]} upstream"
 	git clone -o upstream ${REMOTES[$k]} ${BUILDORDER[$k]}/
 done
