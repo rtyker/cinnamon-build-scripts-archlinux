@@ -138,7 +138,7 @@ while [[ ${#PIDS[@]} != 0 ]]; do
 		# if 
 		if ! ps -p ${PIDS[$i]} > /dev/null; then
 			unset PIDS[$i]
-			echo "..............debuild finished for ${PROCESSNAMES[$i]}"
+			echo "..............build finished for ${PROCESSNAMES[$i]}"
 			unset PROCESSNAMES[$i]
 		fi
 	done
