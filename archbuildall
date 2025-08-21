@@ -48,7 +48,47 @@ wrouesnelgitdch_arch() {
 }
 
 
-$(pwd)/buildorder
+
+# Conteúdo movido de buildorder
+BUILDORDER=( \
+        xapps \
+        python-xapp \
+        cjs \
+        cinnamon-desktop \
+        muffin \
+        cinnamon-settings-daemon \
+        cinnamon-session \
+        # cinnamon-translations \
+        cinnamon-menus \
+        cinnamon-control-center \
+        cinnamon \
+        cinnamon-screensaver \
+        #cinnamon-bluetooth \
+        nemo \
+    )
+
+REMOTES=( \
+    "https://github.com/linuxmint/xapps.git" \
+    "https://github.com/linuxmint/python-xapp.git" \
+    "https://github.com/linuxmint/cinnamon-desktop.git" \
+    "https://github.com/linuxmint/muffin.git" \
+    "https://github.com/linuxmint/cjs.git" \
+    "https://github.com/linuxmint/cinnamon-settings-daemon.git" \
+    "https://github.com/linuxmint/cinnamon-session.git" \
+    "https://github.com/linuxmint/cinnamon-translations.git" \
+    "https://github.com/linuxmint/cinnamon-menus.git" \
+    "https://github.com/linuxmint/cinnamon-control-center.git" \
+    "https://github.com/linuxmint/Cinnamon.git" \
+    "https://github.com/linuxmint/cinnamon-screensaver.git" \
+    "https://github.com/linuxmint/cinnamon-bluetooth.git" \
+    "https://github.com/linuxmint/nemo.git" \
+)
+
+if [ -n "$PACKAGE" ]; then
+    BUILD_LIST=($PACKAGE)
+else
+    BUILD_LIST=(${BUILDORDER[@]})
+fi
 
 
 while getopts ":rp:" option; do
