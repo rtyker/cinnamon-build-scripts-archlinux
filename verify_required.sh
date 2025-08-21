@@ -25,6 +25,8 @@ PACOTES=(
     "libgnomekbd"
     "python-gobject"
     "graphene"
+    "js128"
+    "xapp"
 )
 
 FALTANDO=()

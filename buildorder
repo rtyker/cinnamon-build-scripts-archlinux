@@ -3,9 +3,9 @@
 BUILDORDER=( \
         xapps \
         python-xapp \
-		cinnamon-desktop \
-		muffin \
 		cjs \
+		cinnamon-desktop \
+		muffin \		
 		cinnamon-settings-daemon \
 		cinnamon-session \
 		cinnamon-translations \

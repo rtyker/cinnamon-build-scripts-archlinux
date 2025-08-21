@@ -1,5 +1,7 @@
 
+
 #!/bin/bash
+export PKG_CONFIG_PATH="/usr/local/lib/pkgconfig:$PKG_CONFIG_PATH"
 
 # Verifica se está rodando no Arch Linux
 if ! grep -q "^ID=arch" /etc/os-release 2>/dev/null; then
@@ -8,12 +10,12 @@ if ! grep -q "^ID=arch" /etc/os-release 2>/dev/null; then
 fi
 
 # Verifica se o usuário é root ou usou sudo
-if [ "$EUID" -ne 0 ]; then
-    if [ -z "$SUDO_USER" ]; then
-        echo "Execute este script como root ou usando sudo. Abortando."
-        exit 1
-    fi
-fi
+# if [ "$EUID" -ne 0 ]; then
+#     if [ -z "$SUDO_USER" ]; then
+#         echo "Execute este script como root ou usando sudo. Abortando."
+#         exit 1
+#     fi
+# fi
 
 GITRESET=
 PACKAGE=""
@@ -46,7 +48,7 @@ wrouesnelgitdch_arch() {
 }
 
 
-. buildorder
+$(pwd)/buildorder
 
 
 while getopts ":rp:" option; do
@@ -79,7 +81,7 @@ for dir in ${BUILD_LIST[@]}; do
         echo "..............Building $dir with meson/ninja"
         meson setup builddir
         meson compile -C builddir
-        meson install -C builddir
+        sudo meson install -C builddir
         if [ $? != 0 ]; then
             echo "ERROR with $dir!"
             exit 1
