@@ -1,4 +1,19 @@
+
 #!/bin/bash
+
+# Verifica se está rodando no Arch Linux
+if ! grep -q "^ID=arch" /etc/os-release 2>/dev/null; then
+    echo "Este script só pode ser executado no Arch Linux. Abortando."
+    exit 1
+fi
+
+# Verifica se o usuário é root ou usou sudo
+if [ "$EUID" -ne 0 ]; then
+    if [ -z "$SUDO_USER" ]; then
+        echo "Execute este script como root ou usando sudo. Abortando."
+        exit 1
+    fi
+fi
 
 GITRESET=
 PACKAGE=""

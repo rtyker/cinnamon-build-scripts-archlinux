@@ -11,10 +11,14 @@ PACOTES=(
     "xtrans"
     "vala"
     "network-manager-applet"
-    "xdotool"    
-    "xorg"
+    "xdotool"        
     "xorg-xinit"
     "xorg-server"
+    "nano"
+    "xorg-xclock"
+    "xorg-twm"
+    "xterm"
+    "cmake"
 )
 
 FALTANDO=()
