@@ -8,12 +8,12 @@ BUILDORDER=( \
 		muffin \		
 		cinnamon-settings-daemon \
 		cinnamon-session \
-		cinnamon-translations \
+		# cinnamon-translations \
 		cinnamon-menus \
 		cinnamon-control-center \
 		cinnamon \
 		cinnamon-screensaver \
-		cinnamon-bluetooth \
+		#cinnamon-bluetooth \
         nemo \
 	)
 

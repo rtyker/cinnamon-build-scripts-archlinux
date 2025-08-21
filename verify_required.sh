@@ -27,6 +27,16 @@ PACOTES=(
     "graphene"
     "js128"
     "xapp"
+    "wayland-protocols"
+    "libpipewire"
+    "libnotify"
+    "upower"
+    "gcr"
+    "gstreamer"
+    "sassc"
+    "libexif"
+    "exempi"
+    "libgsf"
 )
 
 FALTANDO=()
