@@ -12,6 +12,9 @@ PACOTES=(
     "vala"
     "network-manager-applet"
     "xdotool"    
+    "xorg"
+    "xorg-xinit"
+    "xorg-server"
 )
 
 FALTANDO=()
