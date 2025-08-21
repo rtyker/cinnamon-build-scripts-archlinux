@@ -79,7 +79,7 @@ for dir in ${BUILD_LIST[@]}; do
         echo "..............Building $dir with meson/ninja"
         meson setup builddir
         meson compile -C builddir
-        #meson install -C builddir
+        meson install -C builddir
         if [ $? != 0 ]; then
             echo "ERROR with $dir!"
             exit 1

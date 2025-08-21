@@ -19,6 +19,12 @@ PACOTES=(
     "xorg-twm"
     "xterm"
     "cmake"
+    "glib2"
+    "glib2-devel"
+    "libcanberra"
+    "libgnomekbd"
+    "python-gobject"
+    "graphene"
 )
 
 FALTANDO=()
