@@ -1,0 +1,90 @@
+#!/bin/bash
+
+GITRESET=
+PACKAGE=""
+
+wrouesnelgitdch_arch() {
+    if [ ! -e archlinux/PKGBUILD ]; then
+        echo "archlinux/PKGBUILD not found!"
+        return
+    fi
+
+    # Get upstream version from PKGBUILD
+    DEBVERSION=$(grep '^pkgver=' archlinux/PKGBUILD | cut -d= -f2)
+    BUILDDATE=$(date +%s)
+    GITTISH=$(git rev-parse --short HEAD)
+
+    # Get installed version if any
+    INSTALLEDVERSION=$(pacman -Q --query $(source archlinux/PKGBUILD | grep '^pkgname=' | cut -d= -f2) 2>/dev/null | awk '{print $2}')
+
+    if [[ -z "$INSTALLEDVERSION" || "$DEBVERSION" > "$INSTALLEDVERSION" ]]; then
+        BUILDVERSION=$DEBVERSION
+    else
+        BUILDVERSION=$INSTALLEDVERSION
+    fi
+
+    FULLVERSION="${BUILDVERSION}+wrouesnel${BUILDDATE}~git${GITTISH}"
+    echo "Setting package version to: $FULLVERSION"
+
+    # Update PKGBUILD
+    sed -i "s/^pkgver=.*/pkgver=${FULLVERSION}/" archlinux/PKGBUILD
+}
+
+
+. buildorder
+
+
+while getopts ":rp:" option; do
+    case $option in
+        r)
+            GITRESET=1
+            ;;
+        p)
+            PACKAGE=$OPTARG
+            ;;
+    esac
+done
+
+if [ -n "$PACKAGE" ]; then
+    BUILD_LIST=($PACKAGE)
+else
+    BUILD_LIST=(${BUILDORDER[@]})
+fi
+
+PIDS=()
+PROCESSNAMES=()
+
+for dir in ${BUILD_LIST[@]}; do
+    (
+        cd $dir
+        if [ ! -z $GITRESET ]; then
+            echo "..............Resetting tree"
+            git reset --hard
+        fi
+        echo "..............Building $dir with meson/ninja"
+        meson setup builddir
+        meson compile -C builddir
+        #meson install -C builddir
+        if [ $? != 0 ]; then
+            echo "ERROR with $dir!"
+            exit 1
+        fi
+        cd ..
+    ) &
+    # store running pids
+    PIDS+=($!)
+    PROCESSNAMES+=($dir)
+done
+while [[ ${#PIDS[@]} != 0 ]]; do
+	# Loop over pids look for finishes
+	for i in ${!PIDS[@]}; do
+		# if 
+		if ! ps -p ${PIDS[$i]} > /dev/null; then
+			unset PIDS[$i]
+			echo "..............debuild finished for ${PROCESSNAMES[$i]}"
+			unset PROCESSNAMES[$i]
+		fi
+	done
+done
+
+exit 0

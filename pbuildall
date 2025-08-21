@@ -3,15 +3,12 @@
 . buildorder
 
 for dir in ${BUILDORDER[@]}; do
-    echo "..............Running pbuilder for $dir"
+    echo "..............Running makepkg for $dir"
     cd $dir
-    VERSION=$(dpkg-parsechangelog | sed -n "s/^Version: //p")
-    cd ..
-    # HACK: fix xapps
-    dsc_basename="$(echo ${dir} | sed s/xapps/xapp/g)"
-    sudo DIST=$1 pbuilder build ${dsc_basename}_$VERSION.dsc
+    makepkg -s
     if [ $? != 0 ]; then
         echo "ERROR with $dir!"
         exit 1
     fi
+    cd ..
 done

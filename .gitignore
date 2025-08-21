@@ -1,0 +1,14 @@
+cinnamon-bluetooth/
+cinnamon-control-center/
+cinnamon-desktop/
+cinnamon-menus/
+cinnamon-screensaver/
+cinnamon-session/
+cinnamon-settings-daemon/
+cinnamon-translations/
+cinnamon/
+cjs/
+muffin/
+nemo/
+python-xapp/
+xapps/
